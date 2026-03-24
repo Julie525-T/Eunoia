@@ -8,6 +8,9 @@ const GetProducts=()=>{
     const[loading,setLoading]=useState("")
     const[error,setError]=useState("")
     const[products,setProducts]=useState([])
+    const[searchTerm,setSearchTerm]=useState("")
+    const [wishlist, setWishlist] = useState([]);
+    
 
 
 
@@ -44,7 +47,25 @@ const GetProducts=()=>{
 
     useEffect(()=>{
         fetchProducts()
+
+        const savedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    setWishlist(savedWishlist);
     },[])
+
+    const toggleWishlist = (product) => {
+    const exists = wishlist.find((item) => item.product_id === product.product_id);
+
+    let updatedWishlist;
+
+    if (exists) {
+        updatedWishlist = wishlist.filter((item) => item.product_id !== product.product_id);
+    } else {
+        updatedWishlist = [...wishlist, product];
+    }
+
+    setWishlist(updatedWishlist);
+    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+};
 
     return(
 
@@ -52,20 +73,60 @@ const GetProducts=()=>{
 
             <h1>Available Products</h1>
 
+            <p>❤️ Wishlist: {wishlist.length}</p>
+
             <p className="text-warning">{loading}</p>
             <p className="text-danger">{error}</p>
 
             {/* Loop through our product */}
+         <div>
+           <input
+              type="text"
+              placeholder="🔍 Search your vibe..."
+              className="form-control rounded-pill shadow-sm px-4 py-2"
+              style={{ maxWidth: "400px", margin: "0 auto" }}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+             />
+         </div> 
 
-            {products.map((product)=>( 
+            {products
+              .filter((product) =>
+              product.product_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              product.product_description.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map((product) => (
 
            
 
-            <div className="col-md-3 justify-content-center">
+        <div className="col-md-3 justify-content-center">
 
                 <div className="card shadow m-4">
 
-                <img src={image_url + product.product_photo} alt="Hair clip" className="product_img" />
+                <div style={{ position: "relative" }}>
+          <img 
+                src={image_url + product.product_photo} 
+                alt={product.product_name} 
+                className="product_img w-100"
+         />
+
+           <span
+             onClick={() => toggleWishlist(product)}
+             style={{
+               position: "absolute",
+               top: "12px",
+               right: "12px",
+               cursor: "pointer",
+               fontSize: "22px",
+               background: "white",
+               borderRadius: "50%",
+               padding: "6px 10px",
+               boxShadow: "0 2px 6px rgba(0,0,0,0.2)"
+          }}
+         >
+          {wishlist.find(item => item.product_id === product.product_id) ? "❤️" : "🤍"}
+         </span>
+        </div>
 
                 <div className="card-body">
 
@@ -74,6 +135,9 @@ const GetProducts=()=>{
                     <p className="text-warning">Ksh {product.product_cost}</p>
 
                     <input type="button" className=" btn btn-info w-100"  value="Purchase now" onClick={()=>navigate("/mpesa",{state:{product}})}/>
+
+                   
+                    
 
                 </div>
 

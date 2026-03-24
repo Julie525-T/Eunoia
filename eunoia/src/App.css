@@ -15,7 +15,7 @@
 
 .App-header {
   background-color: rgb(230, 255, 254);
-  min-height: 20vh;
+  min-height: 15vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +42,7 @@
 
 .navlink{
   color: darkturquoise;
-  font-size: 30px;
+  font-size: 20px;
   text-decoration: none;
   margin-left: 30px;
   margin-bottom: 20px;
@@ -77,5 +77,21 @@
 .product_img:hover{
   transform: scale(1.2);
   transition: 3s;
+}
+
+.footer{
+  background-color: rgb(176, 231, 231);
+  padding: 30px;
+}
+.last{
+  height: 50px;
+  padding: 30px;
+  font-size: larger;
+  font-family: 'Times New Roman', Times, serif;
+  padding-bottom: 50px;
+  font-weight: 200;
+}
+.nav{
+  text-decoration: none;
 }
 
